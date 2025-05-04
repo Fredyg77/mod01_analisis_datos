@@ -1,4 +1,3 @@
-
 import pandas as pd
 
 def generar_IDS(df_name):
@@ -11,8 +10,8 @@ def generar_IDS(df_name):
     
     # Convertir las columnas a tipo string y aplicar zfill cuando sea necesario
     df_name["DIRECTORIO"] = df_name["DIRECTORIO"].astype(str)
-    df_name["SECUENCIA_P"] = df_name["SECUENCIA_P"].astype(str).str.zfill(2)
-    df_name["SECUENCIA_ENCUESTA"] = df_name["SECUENCIA_ENCUESTA"].astype(str).str.zfill(2)
+    df_name["SECUENCIA_P"] = df_name["SECUENCIA_P"].apply(lambda x: str(x).zfill(2))
+    df_name["SECUENCIA_ENCUESTA"] = df_name["SECUENCIA_ENCUESTA"].apply(lambda x: str(x).zfill(2))
     
     # Crear las columnas ID2 y ID3
     df_name["ID2"] = df_name["DIRECTORIO"] + df_name["SECUENCIA_P"]
