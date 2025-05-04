@@ -1,3 +1,4 @@
+
 import pandas as pd
 
 def generar_ids(df, directorio_col="DIRECTORIO", secuencia_p_col="SECUENCIA_P", secuencia_encuesta_col="SECUENCIA_ENCUESTA"):
