@@ -1,37 +1,33 @@
 
 import pandas as pd
 
-def generar_IDS(data_frame):
-    """
-    Genera las columnas ID2 e ID3 en un DataFrame, usando las columnas 'DIRECTORIO', 'SECUENCIA_P', 
-    y 'SECUENCIA_ENCUESTA'. Además, reorganiza las columnas y devuelve el DataFrame actualizado.
-
-    Args:
-    - data_frame (pd.DataFrame): El DataFrame de entrada con las columnas 'DIRECTORIO', 'SECUENCIA_P',
-      y 'SECUENCIA_ENCUESTA'.
-
-    Returns:
-    - pd.DataFrame: El DataFrame con las columnas ID2, ID3 generadas y reorganizadas.
-    """
+def generar_IDS(df_name):
+    # Verificar si las columnas necesarias existen en el DataFrame
+    required_columns = ["DIRECTORIO", "SECUENCIA_P", "SECUENCIA_ENCUESTA"]
+    missing_columns = [col for col in required_columns if col not in df_name.columns]
     
-    # Aseguramos que las columnas sean de tipo string
-    data_frame['SECUENCIA_P'] = data_frame['SECUENCIA_P'].astype(str).str.zfill(2)
-    data_frame['SECUENCIA_ENCUESTA'] = data_frame['SECUENCIA_ENCUESTA'].astype(str).str.zfill(2)
+    if missing_columns:
+        raise ValueError(f"Faltan las siguientes columnas en el DataFrame: {', '.join(missing_columns)}")
     
-    # Generar las nuevas columnas ID2 e ID3
-    data_frame["ID2"] = data_frame["DIRECTORIO"] + data_frame["SECUENCIA_P"]
-    data_frame["ID3"] = data_frame["DIRECTORIO"] + data_frame["SECUENCIA_P"] + data_frame["SECUENCIA_ENCUESTA"]
-
+    # Convertir las columnas a tipo string y aplicar zfill cuando sea necesario
+    df_name["DIRECTORIO"] = df_name["DIRECTORIO"].astype(str)
+    df_name["SECUENCIA_P"] = df_name["SECUENCIA_P"].astype(str).str.zfill(2)
+    df_name["SECUENCIA_ENCUESTA"] = df_name["SECUENCIA_ENCUESTA"].astype(str).str.zfill(2)
+    
+    # Crear las columnas ID2 y ID3
+    df_name["ID2"] = df_name["DIRECTORIO"] + df_name["SECUENCIA_P"]
+    df_name["ID3"] = df_name["DIRECTORIO"] + df_name["SECUENCIA_P"] + df_name["SECUENCIA_ENCUESTA"]
+    
     # Reordenar las columnas para poner ID2 y ID3 al principio
-    columnas_reordenadas = ["ID3", "ID2"] + [col for col in data_frame.columns if col not in ["ID3", "ID2"]]
-    data_frame = data_frame[columnas_reordenadas]
+    columnas_reordenadas = ["ID3", "ID2"] + [col for col in df_name.columns if col not in ["ID3", "ID2"]]
+    df_name = df_name[columnas_reordenadas]
     
-    # Imprimir el nombre del DataFrame junto con los registros únicos
+    # Impresión informativa con el nombre del DataFrame
     print("=" * 80)
-    print(f"Análisis del DataFrame: {data_frame.name if hasattr(data_frame, 'name') else 'Desconocido'}")
-    print(f"Número de registros únicos en [DIRECTORIO]: {data_frame['DIRECTORIO'].nunique()}")
-    print(f"Número de registros únicos en [ID2 = DIRECTORIO + SECUENCIA_P]: {data_frame['ID2'].nunique()}")
-    print(f"Número de registros únicos en [ID3 = DIRECTORIO + SECUENCIA_P + SECUENCIA_ENCUESTA]: {data_frame['ID3'].nunique()}")
+    print(f"Procesado DataFrame: {df_name}")
+    print(f"Número de registros únicos en [DIRECTORIO]: {df_name['DIRECTORIO'].nunique()}")
+    print(f"Número de registros únicos en [ID2 = DIRECTORIO + SECUENCIA_P]: {df_name['ID2'].nunique()}")
+    print(f"Número de registros únicos en [ID3 = DIRECTORIO + SECUENCIA_P + SECUENCIA_ENCUESTA]: {df_name['ID3'].nunique()}")
     print("=" * 100)
-
-    return data_frame
+    
+    return df_name
